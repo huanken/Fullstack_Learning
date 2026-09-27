@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>React API Consumption Dashboard — Day 27</title>
+  <!-- React & Babel CDNs -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0f172a; color: #f8fafc; }
+    .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+  </style>
+</head>
+<body class="min-h-screen p-4 md:p-8">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useCallback } = React;
+
+    // Toast Notification Component
+    function Toast({ toast, onClose }) {
+      if (!toast) return null;
+      const isSuccess = toast.type === 'success';
+      return (
+        <div className={`fixed bottom-6 right-6 px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-3 border z-50 animate-bounce ${isSuccess ? 'bg-emerald-950/90 text-emerald-300 border-emerald-500/40' : 'bg-rose-950/90 text-rose-300 border-rose-500/40'}`}>
+          <span>{isSuccess ? '✅' : '❌'}</span>
+          <span className="font-medium text-sm">{toast.message}</span>
+          <button onClick={onClose} className="ml-2 text-xs opacity-60 hover:opacity-100">✕</button>
+        </div>
+      );
+    }
+
+    // Modal Form Component (Create & Edit Product)
+    function ProductModal({ isOpen, onClose, onSubmit, initialData }) {
+      const [formData, setFormData] = useState({ title: '', category: 'Electronics', price: '', stock: '', description: '' });
+      const [formError, setFormError] = useState('');
+
+      useEffect(() => {
+        if (initialData) {
+          setFormData(initialData);
+        } else {
+          setFormData({ title: '', category: 'Electronics', price: '', stock: '', description: '' });
+        }
+        setFormError('');
+      }, [initialData, isOpen]);
+
+      if (!isOpen) return null;
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        if (!formData.title || formData.title.trim().length < 3) {
+          setFormError('Title must be at least 3 characters long');
+          return;
+        }
+        if (!formData.price || Number(formData.price) <= 0) {
+          setFormError('Price must be greater than 0');
+          return;
+        }
+        onSubmit(formData);
+      };
+
+      return (
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-40">
+          <div className="glass-card w-full max-w-lg rounded-2xl p-6 shadow-2xl relative border border-slate-700/50">
+            <h2 className="text-xl font-bold mb-4 text-white flex items-center gap-2">
+              {initialData ? '✏️ Edit Product' : '✨ Add New Product'}
+            </h2>
+
+            {formError && (
+              <div className="mb-4 p-3 bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs rounded-lg">
+                ⚠️ {formError}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold uppercase text-slate-400 mb-1">Product Title</label>
+                <input
+                  type="text"
+                  value={formData.title}
+                  onChange={e => setFormData({ ...formData, title: e.target.value })}
+                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"
+                  placeholder="e.g. Ergonomic Office Chair"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold uppercase text-slate-400 mb-1">Category</label>
+                  <select
+                    value={formData.category}
+                    onChange={e => setFormData({ ...formData, category: e.target.value })}
+                    className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"
+                  >
+                    <option value="Electronics">Electronics</option>
+                    <option value="Books">Books</option>
+                    <option value="Furniture">Furniture</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold uppercase text-slate-400 mb-1">Price ($)</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={formData.price}
+                    onChange={e => setFormData({ ...formData, price: e.target.value })}
+                    className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"
+                    placeholder="99.99"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold uppercase text-slate-400 mb-1">Stock Quantity</label>
+                <input
+                  type="number"
+                  value={formData.stock}
+                  onChange={e => setFormData({ ...formData, stock: e.target.value })}
+                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"
+                  placeholder="50"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold uppercase text-slate-400 mb-1">Description</label>
+                <textarea
+                  rows="3"
+                  value={formData.description}
+                  onChange={e => setFormData({ ...formData, description: e.target.value })}
+                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3.5 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"
+                  placeholder="Short product specs..."
+                ></textarea>
+              </div>
+
+              <div className="flex justify-end gap-3 pt-3">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white rounded-lg transition"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg shadow-lg shadow-indigo-600/30 transition"
+                >
+                  {initialData ? 'Save Changes' : 'Create Product'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      );
+    }
+
+    // Main App Component
+    function App() {
+      const [products, setProducts] = useState([]);
+      const [isLoading, setIsLoading] = useState(true);
+      const [error, setError] = useState(null);
+      const [search, setSearch] = useState('');
+      const [category, setCategory] = useState('All');
+      const [toast, setToast] = useState(null);
+      const [isModalOpen, setIsModalOpen] = useState(false);
+      const [editingProduct, setEditingProduct] = useState(null);
+
+      const showToast = (message, type = 'success') => {
+        setToast({ message, type });
+        setTimeout(() => setToast(null), 3500);
+      };
+
+      // Fetch Products API Call
+      const fetchProducts = useCallback(async () => {
+        setIsLoading(true);
+        setError(null);
+        try {
+          const query = new URLSearchParams();
+          if (search) query.append('search', search);
+          if (category !== 'All') query.append('category', category);
+
+          const res = await fetch(`/api/v1/products?${query.toString()}`);
+          if (!res.ok) throw new Error(`Server status ${res.status}`);
+          const json = await res.json();
+          setProducts(json.data);
+        } catch (err) {
+          setError(err.message || 'Failed to fetch products');
+        } finally {
+          setIsLoading(false);
+        }
+      }, [search, category]);
+
+      useEffect(() => {
+        const timer = setTimeout(() => {
+          fetchProducts();
+        }, 300); // 300ms Debounce
+        return () => clearTimeout(timer);
+      }, [fetchProducts]);
+
+      // Optimistic Delete Handler
+      const handleDelete = async (id) => {
+        const prev = [...products];
+        setProducts(products.filter(p => p.id !== id)); // Optimistic UI Update
+
+        try {
+          const res = await fetch(`/api/v1/products/${id}`, { method: 'DELETE' });
+          if (!res.ok) throw new Error('Deletion failed');
+          showToast('Product deleted successfully', 'success');
+        } catch (err) {
+          setProducts(prev); // Rollback
+          showToast(`Error deleting product: ${err.message}`, 'error');
+        }
+      };
+
+      // Create or Update Form Handler
+      const handleFormSubmit = async (formData) => {
+        try {
+          if (editingProduct) {
+            // Update
+            const res = await fetch(`/api/v1/products/${editingProduct.id}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(formData)
+            });
+            if (!res.ok) throw new Error('Update failed');
+            showToast('Product updated successfully!', 'success');
+          } else {
+            // Create
+            const res = await fetch('/api/v1/products', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(formData)
+            });
+            if (!res.ok) throw new Error('Creation failed');
+            showToast('New product created!', 'success');
+          }
+          setIsModalOpen(false);
+          setEditingProduct(null);
+          fetchProducts();
+        } catch (err) {
+          showToast(err.message, 'error');
+        }
+      };
+
+      return (
+        <div className="max-w-6xl mx-auto space-y-6">
+          {/* Header */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 glass-card p-6 rounded-2xl">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-wider text-indigo-400">Day 27 Practical Lab</span>
+              <h1 className="text-2xl font-extrabold text-white">React API Consumption & CRUD App</h1>
+            </div>
+            <button
+              onClick={() => { setEditingProduct(null); setIsModalOpen(true); }}
+              className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-sm font-semibold shadow-lg shadow-indigo-600/30 transition flex items-center gap-2 self-start md:self-auto"
+            >
+              <span>➕</span> Add New Product
+            </button>
+          </div>
+
+          {/* Search & Filter Bar */}
+          <div className="glass-card p-4 rounded-xl flex flex-col md:flex-row gap-4 items-center justify-between">
+            <div className="relative w-full md:w-96">
+              <input
+                type="text"
+                placeholder="🔍 Search products by title or description..."
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                className="w-full bg-slate-900 border border-slate-700/80 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"
+              />
+            </div>
+
+            <div className="flex gap-2 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
+              {['All', 'Electronics', 'Books', 'Furniture'].map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => setCategory(cat)}
+                  className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition ${category === cat ? 'bg-indigo-600 text-white shadow' : 'bg-slate-800 text-slate-400 hover:text-white'}`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Main Content / Table */}
+          <div className="glass-card rounded-2xl overflow-hidden">
+            {isLoading ? (
+              <div className="p-12 text-center text-slate-400 text-sm flex items-center justify-center gap-3">
+                <span className="animate-spin text-xl">⏳</span> Loading products from Express API...
+              </div>
+            ) : error ? (
+              <div className="p-12 text-center text-rose-400 text-sm">
+                ❌ Error: {error}
+              </div>
+            ) : products.length === 0 ? (
+              <div className="p-12 text-center text-slate-400 text-sm">
+                📦 No products found. Try adjusting your search or category filter.
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-sm">
+                  <thead className="bg-slate-900/80 uppercase text-[10px] tracking-wider text-slate-400 border-b border-slate-800">
+                    <tr>
+                      <th className="py-3.5 px-5">Product Title</th>
+                      <th className="py-3.5 px-5">Category</th>
+                      <th className="py-3.5 px-5">Price</th>
+                      <th className="py-3.5 px-5">Stock</th>
+                      <th className="py-3.5 px-5 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800/60">
+                    {products.map(p => (
+                      <tr key={p.id} className="hover:bg-slate-800/40 transition">
+                        <td className="py-4 px-5">
+                          <div className="font-semibold text-slate-100">{p.title}</div>
+                          <div className="text-xs text-slate-400 line-clamp-1">{p.description}</div>
+                        </td>
+                        <td className="py-4 px-5">
+                          <span className="px-2.5 py-1 rounded-md text-[11px] font-medium bg-slate-800 text-indigo-300 border border-slate-700">
+                            {p.category}
+                          </span>
+                        </td>
+                        <td className="py-4 px-5 font-bold text-emerald-400">
+                          ${Number(p.price).toFixed(2)}
+                        </td>
+                        <td className="py-4 px-5 text-slate-300">
+                          {p.stock} units
+                        </td>
+                        <td className="py-4 px-5 text-right space-x-2">
+                          <button
+                            onClick={() => { setEditingProduct(p); setIsModalOpen(true); }}
+                            className="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs rounded-lg transition"
+                          >
+                            ✏️ Edit
+                          </button>
+                          <button
+                            onClick={() => handleDelete(p.id)}
+                            className="px-2.5 py-1 bg-rose-500/20 hover:bg-rose-500/40 text-rose-300 text-xs rounded-lg transition border border-rose-500/30"
+                          >
+                            🗑️ Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+
+          <ProductModal
+            isOpen={isModalOpen}
+            onClose={() => { setIsModalOpen(false); setEditingProduct(null); }}
+            onSubmit={handleFormSubmit}
+            initialData={editingProduct}
+          />
+
+          <Toast toast={toast} onClose={() => setToast(null)} />
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>

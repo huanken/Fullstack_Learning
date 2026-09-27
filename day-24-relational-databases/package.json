@@ -1,0 +1,12 @@
+{
+  "name": "day-24-relational-databases",
+  "version": "1.0.0",
+  "description": "Relational Databases Demo: Schema Design, 1-N / N-N Relationships, Foreign Keys and JOIN Queries",
+  "main": "database-demo.js",
+  "scripts": {
+    "start": "node database-demo.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^9.4.3"
+  }
+}

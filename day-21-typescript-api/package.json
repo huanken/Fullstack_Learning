@@ -1,0 +1,16 @@
+{
+  "name": "day-21-typescript-api",
+  "version": "1.0.0",
+  "description": "TypeScript & API Consumption Demo with Typed Responses and Error Handling",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "build": "tsc"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^20.11.24",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}

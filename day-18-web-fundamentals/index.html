@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Day 18 - Web Frontend Fundamentals Demo</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Semantic Header -->
+  <header class="site-header">
+    <div class="container header-content">
+      <div class="logo">
+        <span class="badge">Day 18</span>
+        <h1>Web Frontend Fundamentals</h1>
+      </div>
+      <!-- Semantic Navigation -->
+      <nav class="site-nav">
+        <a href="#semantic-section">Semantic HTML</a>
+        <a href="#box-model-section">Box Model Visualizer</a>
+        <a href="#dom-section">DOM Manipulation</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Semantic Main Content -->
+  <main class="container main-content">
+    
+    <!-- Section 1: Semantic HTML Structure Showcase -->
+    <section id="semantic-section" class="card">
+      <h2>1. HTML5 Semantic Elements Layout</h2>
+      <p class="desc">Trang này được cấu trúc theo chuẩn HTML5 Semantics: <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;section&gt;</code>, <code>&lt;article&gt;</code>, <code>&lt;aside&gt;</code>, <code>&lt;footer&gt;</code>.</p>
+      
+      <div class="semantic-grid">
+        <article class="article-box">
+          <span class="tag">&lt;article&gt;</span>
+          <h3>Tại sao cần HTML Semantics?</h3>
+          <p>Semantic tags giúp screen readers (hỗ trợ người khiếm thị), search engines (SEO) và lập trình viên dễ dàng hiểu rõ ngữ nghĩa và phân cấp của nội dung trang web.</p>
+        </article>
+        
+        <aside class="aside-box">
+          <span class="tag">&lt;aside&gt;</span>
+          <h3>Ghi chú nhanh</h3>
+          <p>Mỗi trang chỉ có duy nhất <strong>1 thẻ &lt;main&gt;</strong> chứa nội dung trung tâm.</p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Section 2: Interactive Box Model Visualizer -->
+    <section id="box-model-section" class="card">
+      <h2>2. Interactive CSS Box Model Visualizer</h2>
+      <p class="desc">Thay đổi thông số để quan sát cách <strong>Margin</strong>, <strong>Border</strong>, <strong>Padding</strong> và <strong>Content</strong> hoạt động cùng với sự khác biệt giữa <code>content-box</code> vs <code>border-box</code>.</p>
+
+      <div class="controls-panel">
+        <div class="control-group">
+          <label for="box-sizing-select"><strong>box-sizing:</strong></label>
+          <select id="box-sizing-select">
+            <option value="border-box">border-box (Khuyên dùng - Width bao gồm padding & border)</option>
+            <option value="content-box">content-box (Mặc định - Width chỉ tính phần content)</option>
+          </select>
+        </div>
+
+        <div class="slider-grid">
+          <div class="slider-item">
+            <label>Width: <span id="val-width">240</span>px</label>
+            <input type="range" id="input-width" min="150" max="350" value="240">
+          </div>
+          <div class="slider-item">
+            <label>Padding: <span id="val-padding">24</span>px</label>
+            <input type="range" id="input-padding" min="0" max="50" value="24">
+          </div>
+          <div class="slider-item">
+            <label>Border: <span id="val-border">4</span>px</label>
+            <input type="range" id="input-border" min="0" max="20" value="4">
+          </div>
+          <div class="slider-item">
+            <label>Margin: <span id="val-margin">20</span>px</label>
+            <input type="range" id="input-margin" min="0" max="40" value="20">
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Diagram Visualization -->
+      <div class="box-model-container">
+        <div id="visual-margin" class="box-layer layer-margin">
+          <span class="layer-label">MARGIN (<span id="lbl-margin">20px</span>)</span>
+          <div id="visual-border" class="box-layer layer-border">
+            <span class="layer-label">BORDER (<span id="lbl-border">4px</span>)</span>
+            <div id="visual-padding" class="box-layer layer-padding">
+              <span class="layer-label">PADDING (<span id="lbl-padding">24px</span>)</span>
+              <div id="visual-content" class="box-layer layer-content">
+                <span class="layer-label">CONTENT</span>
+                <span id="content-dim">240px × 100px</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="calculation-summary">
+        <h4>📊 Tổng chiều rộng chiếm dụng trên trang (Total Rendered Width):</h4>
+        <div id="calc-formula" class="formula-box"></div>
+      </div>
+    </section>
+
+    <!-- Section 3: DOM Manipulation Lab -->
+    <section id="dom-section" class="card">
+      <h2>3. DOM Manipulation & Event Handling Lab</h2>
+      <p class="desc">Thực hành các hàm DOM: <code>getElementById</code>, <code>querySelector</code>, <code>addEventListener</code>, <code>createElement</code>, <code>classList.toggle</code>.</p>
+
+      <div class="dom-lab">
+        <div class="input-row">
+          <input type="text" id="item-input" placeholder="Nhập tên công nghệ web (VD: Flexbox, Grid, ES6)...">
+          <button id="add-btn" class="btn primary">Thêm vào DOM</button>
+        </div>
+
+        <ul id="dynamic-list" class="tech-list">
+          <li class="tech-item"><span>HTML5 Semantics</span> <button class="delete-btn">×</button></li>
+          <li class="tech-item"><span>CSS Box Model</span> <button class="delete-btn">×</button></li>
+          <li class="tech-item"><span>Event Loop</span> <button class="delete-btn">×</button></li>
+        </ul>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Semantic Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <p>Frontend Learning Review — Ngày 18/09 • HTML Semantics, Box Model & DOM Manipulation</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

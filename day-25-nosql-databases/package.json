@@ -1,0 +1,13 @@
+{
+  "name": "day-25-nosql-databases",
+  "version": "1.0.0",
+  "description": "Demo NoSQL Data Modeling & Mongoose CRUD Simulation",
+  "main": "nosql-demo.js",
+  "type": "module",
+  "scripts": {
+    "start": "node nosql-demo.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

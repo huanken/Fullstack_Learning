@@ -1,0 +1,53 @@
+### 1. Root & Health Check
+GET http://localhost:3000/
+
+### 2. Demo Event Loop & Non-blocking I/O
+GET http://localhost:3000/api/event-loop-demo
+
+### 3. Lấy tất cả tasks
+GET http://localhost:3000/api/tasks
+
+### 4. Lọc tasks đã hoàn thành (done=true)
+GET http://localhost:3000/api/tasks?done=true
+
+### 5. Lọc tasks chưa hoàn thành (done=false)
+GET http://localhost:3000/api/tasks?done=false
+
+### 6. Tìm kiếm task theo từ khóa
+GET http://localhost:3000/api/tasks?search=Express
+
+### 7. Lấy chi tiết 1 task theo ID
+GET http://localhost:3000/api/tasks/1
+
+### 8. Tạo task mới
+POST http://localhost:3000/api/tasks
+Content-Type: application/json
+
+{
+  "title": "Thực hành thiết kế REST API chuẩn vào ngày 23/9"
+}
+
+### 9. Cập nhật task (đánh dấu hoàn thành)
+PUT http://localhost:3000/api/tasks/3
+Content-Type: application/json
+
+{
+  "title": "Tạo REST API Task Manager với TypeScript (Đã xong)",
+  "done": true
+}
+
+### 10. Xóa task theo ID
+DELETE http://localhost:3000/api/tasks/2
+
+### 11. Test Protected Route - Không có Token (Kỳ vọng 401)
+GET http://localhost:3000/api/admin/stats
+
+### 12. Test Protected Route - Token hợp lệ (Kỳ vọng 200)
+GET http://localhost:3000/api/admin/stats
+Authorization: Bearer secret-token-123
+
+### 13. Test Error Handling Middleware (Kỳ vọng 500)
+GET http://localhost:3000/api/simulate-error
+
+### 14. Test 404 Route Not Found (Kỳ vọng 404)
+GET http://localhost:3000/api/unknown-endpoint

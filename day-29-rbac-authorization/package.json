@@ -1,0 +1,16 @@
+{
+  "name": "day-29-rbac-authorization",
+  "version": "1.0.0",
+  "description": "Hands-on Role-Based Access Control (RBAC) & Secure API in Express.js",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test-rbac.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2"
+  }
+}

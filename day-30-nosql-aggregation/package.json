@@ -1,0 +1,13 @@
+{
+  "name": "day-30-nosql-aggregation",
+  "version": "1.0.0",
+  "description": "Hands-on NoSQL Data Modeling & MongoDB Aggregation Pipeline Simulation",
+  "main": "aggregation-demo.js",
+  "type": "module",
+  "scripts": {
+    "start": "node aggregation-demo.js",
+    "test": "node test-aggregation.js"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

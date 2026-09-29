@@ -1,6 +1,6 @@
 # 📚 Tổng hợp Demo Projects Thực hành (Learning Review Demos)
 
-Kho lưu trữ source code thực hành tương ứng với tất cả các tài liệu bài học từ ngày **18/09/2026** đến **27/09/2026**.
+Kho lưu trữ source code thực hành tương ứng với tất cả các tài liệu bài học từ ngày **18/09/2026** đến **30/09/2026**.
 
 ---
 
@@ -18,44 +18,27 @@ Kho lưu trữ source code thực hành tương ứng với tất cả các tài
 | **25/09** | [`day-25-nosql-databases/`](./day-25-nosql-databases/) | NoSQL & MongoDB Data Modeling, Embed vs Ref & Aggregation | `cd day-25-nosql-databases && npm start` |
 | **26/09** | ⭐ [`day-26-express-database-integration/`](./day-26-express-database-integration/) | **Hands-on: Express REST API + Database Integration** | `cd day-26-express-database-integration && npm run test:api` |
 | **27/09** | ⭐ [`day-27-react-api-consumption/`](./day-27-react-api-consumption/) | **Hands-on: React Frontend App Consuming REST API** | `cd day-27-react-api-consumption && npm start` |
+| **28/09** | ⭐ [`day-28-jwt-auth/`](./day-28-jwt-auth/) | **Hands-on: JWT Authentication & Refresh Token Rotation** | `cd day-28-jwt-auth && npm test` |
+| **29/09** | ⭐ [`day-29-rbac-authorization/`](./day-29-rbac-authorization/) | **Hands-on: Role-Based Access Control (RBAC) & Secure API** | `cd day-29-rbac-authorization && npm test` |
+| **30/09** | ⭐ [`day-30-nosql-aggregation/`](./day-30-nosql-aggregation/) | **Hands-on: NoSQL Data Modeling & MongoDB Aggregation Pipeline** | `cd day-30-nosql-aggregation && npm test` |
 
 ---
 
-## 🌟 Trọng tâm: Dự án Demo Ngày 22/09 (Node.js & Express Basics)
+## 🌟 Trọng tâm: Các dự án thực hành bảo mật & kiến trúc mới (28/09 - 30/09)
 
-Thư mục: `demos/day-22-nodejs-express-basics/`
+### 1. Day 28: JWT Authentication API (`demos/day-28-jwt-auth/`)
+- Triển khai đầy đủ cặp **Access Token (15m)** và **Refresh Token (7d)**.
+- Cơ chế **Refresh Token Rotation**: tự động vô hiệu hóa Refresh Token cũ khi đổi token mới.
+- Xử lý **Token Revocation (Logout / Blacklist)**.
+- Bộ kiểm thử tự động 10/10 test cases (`npm test`).
 
-### 1. Tính năng nổi bật
-- **TypeScript & Express Setup**: Cấu hình TypeScript chuẩn với `tsconfig.json`, `ts-node`, `nodemon`.
-- **Middleware Chain**:
-  - `express.json()` & `express.urlencoded()`
-  - `cors()`
-  - `logger` (Ghi log method, URL, status code, response time)
-  - `authenticate` (Kiểm tra Bearer token cho các route bảo mật)
-  - `404 Handler` & `Global errorHandler` (4 tham số: `err, req, res, next`).
-- **RESTful CRUD Task Management API**:
-  - `GET /api/tasks` (Lọc theo `?done=true/false`, tìm kiếm `?search=keyword`)
-  - `GET /api/tasks/:id` (Lấy chi tiết task)
-  - `POST /api/tasks` (Tạo task mới kèm validation)
-  - `PUT /api/tasks/:id` (Cập nhật task)
-  - `DELETE /api/tasks/:id` (Xóa task, trả về HTTP 204 No Content)
-- **Event Loop Demonstration**: Endpoint `GET /api/event-loop-demo` minh họa cơ chế Non-blocking I/O và Event Loop trong Node.js.
-- **Automated Test Suite**: File `test-api.js` tự động kiểm thử toàn diện 12 test cases.
+### 2. Day 29: RBAC & Secure API (`demos/day-29-rbac-authorization/`)
+- Middleware phân quyền dựa trên Vai trò (`authorizeRoles('admin', 'manager')`) và Quyền hạn cụ thể (`authorizePermission('products:manage')`).
+- Cấu hình OWASP Security Headers (X-Content-Type-Options, X-Frame-Options, XSS protection).
+- XSS Input Sanitization middleware tự động làm sạch `req.body`.
+- Bộ kiểm thử tự động 10/10 test cases (`npm test`).
 
-### 2. Lệnh thực thi nhanh
-
-```bash
-cd demos/day-22-nodejs-express-basics
-
-# Cài đặt thư viện
-npm install
-
-# Khởi động server (Hot-reload)
-npm run dev
-
-# Chạy kiểm thử tự động
-npm run test:api
-
-# Build TypeScript sang JavaScript
-npm run build
-```
+### 3. Day 30: NoSQL & Aggregation Pipeline (`demos/day-30-nosql-aggregation/`)
+- Mô phỏng engine MongoDB Aggregation Pipeline chạy 6 stage: `$match`, `$group`, `$project`, `$lookup`, `$unwind`, `$sort`.
+- So sánh thực nghiệm thiết kế Schema **Embedding** vs **Referencing**.
+- Bộ kiểm thử tự động 5/5 test cases (`npm test`).
